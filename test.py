@@ -1,6 +1,7 @@
 import pytesseract
 from PIL import Image
 from receipt import Receipt
+import os
 
 img = Image.open("receipt.jpg")
 text = pytesseract.image_to_string(img)
@@ -23,13 +24,15 @@ for i in range(len(items)):
         items[i][1] = float(temp[pos+1:].strip())
 
 myReceipt = Receipt()
-# myReceipt.addAll(items)
+myReceipt.addAll(items)
 
 while True:
     text = input("Enter Command (type 'cmd' for list of commands or 'exit' to quit): ")
     info = text.split()
     
-    if info[0] == 'exit':
+    if info[0] == 'clear':
+        os.system('cls')
+    elif info[0] == 'exit':
         break
     elif info[0] == 'cmd':
         myReceipt.commands()
@@ -90,6 +93,7 @@ while True:
             bills = myReceipt.getTotals(info[1])
         else:
             bills = myReceipt.getTotals()
-            
+        
+        print()    
         for k, v in bills.items():
             print(f"{k} owes ${v:.2f}")
