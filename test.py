@@ -2,7 +2,6 @@ import pytesseract
 from PIL import Image
 import re
 from receipt import Receipt
-from user import User
 
 img = Image.open("receipt.jpg")
 text = pytesseract.image_to_string(img)
@@ -35,7 +34,7 @@ while True:
     if info == 'cmd':
         print("Command List")
         print("----------------------------")
-    
+
 
     print(curr)
     
