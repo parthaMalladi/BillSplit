@@ -4,11 +4,30 @@ from user import User
 class Receipt:
     def __init__(self):
         self.items = []
-        self.users = []
+        self.users = {}
+    
+    # adds all items gotten from receipt scan
+    def addAll(self, list):
+        for item, price in list:
+            self.addItem(item, price)
+    
+    # removes item from a list
+    def removeItem(self, name):
+        itemFound = False
+        
+        for i, item in enumerate(self.items):
+            if item.name == name:
+                itemFound = True
+                del self.items[i]
+                break
+        
+        if not itemFound:
+            print(name + " does not exist to be removed")        
     
     # adds item to list
     def addItem(self, name, price=-1):
         itemFound = False
+        price = float(price)
         
         for item in self.items:
             if item.name == name:
@@ -26,34 +45,43 @@ class Receipt:
     
     # adds user to list
     def addUser(self, first, last):
-        for user in self.users:
-            if user.firstName == first and user.lastName == last:
-                print("User " + first + " " + last + " already exists")
-                return
+        combined = first+"-"+last
         
-        temp = User(first, last)
-        self.users.append(temp)
+        if combined in self.users:
+            print("User " + first + " " + last + " already exists")
+        else:
+            temp = User(first, last)
+            self.users[combined] = temp
     
     # assigns users to an item
-    def assign(self, itemName, users):
+    def assign(self, itemName, names):   
         for item in self.items:
             if item.name == itemName:
-                for u in users:
-                    item.addUser(u)
+                for name in names:
+                    item.addUser(self.users[name])
     
     # gets how much money each person owes
     def getTotals(self, multi=1):
         mem = {}
         
-        for u in self.users:
-            mem[u] = 0.0
+        for key in self.users:
+            mem[key] = 0.0
         
         for item in self.items:
             price = item.getSplit()
             for user in item.users:
-                mem[user] += price
+                name = user.firstName+"-"+user.lastName
+                mem[name] += price
         
         for key in mem:
             mem[key] *= multi
         
         return mem
+    
+    # console output showing items, count, price
+    def __str__(self):
+        result = "Item List:\n------------------------------------\n"
+        for item in self.items:
+            result += f"{item.name:40} x{item.count:<3} ${item.price:.2f}\n"
+        result += "------------------------------------\n"
+        return result
