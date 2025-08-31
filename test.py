@@ -32,36 +32,65 @@ while True:
     if info[0] == 'exit':
         break
     elif info[0] == 'cmd':
-        print("Command List")
-        print("---------------------------------------------------------------------")
-        print("To view receipt: view")
-        print("To add user: +user [FirstName, LastName]")
-        print("To add NEW item: +item [Name, Price]")
-        print("To increment count of EXISTING item: +item [Name]")
-        print("To remove an item: -item [Name]")
-        print("To assign an item to users: assign [ItemName] [FirstName1 LastName1, ..., FirstNameX LastNameX]")
-        print("To get totals and add a multiplier if necessary: totals [Multiplier]\n")
+        myReceipt.commands()
     elif info[0] == "view":
         print(myReceipt)
     elif info[0] == "+user":
-        myReceipt.addUser(info[1], info[2])     
+        myReceipt.addUser(info[1], info[2])
     elif info[0] == "+item":
-        if len(info) > 2:
-            myReceipt.addItem(info[1], info[2])
+        priceIndex = -1
+        itemName = ""
+        
+        for i, word in enumerate(info):
+            if i == 0:
+                continue
+            if '$' in word:
+                priceIndex = i
+                break
+            itemName += (word + " ")
+            
+        itemName = itemName[:len(itemName) - 1]
+        
+        if priceIndex == -1:
+            myReceipt.addItem(itemName)
         else:
-            myReceipt.addItem(info[1])
+            price = info[priceIndex][1:]
+            myReceipt.addItem(itemName, price)             
     elif info[0] == "-item":
-        myReceipt.removeItem(info[1])
+        spaceIndex = text.find(' ')
+        itemName = text[spaceIndex + 1:]
+        myReceipt.removeItem(itemName)
     elif info[0] == "assign":
-        names = info[2:]
-        myReceipt.assign(info[1], names)
+        itemName = ""
+        itemIndex = -1
+        
+        for i, word in enumerate(info):
+            if i == 0:
+                continue
+            
+            itemName += (word + " ")
+            
+            if '!' in word:
+                itemIndex = i
+                break
+        
+        itemName = itemName[:len(itemName) - 2]
+        names = []
+        
+        for i in range(itemIndex + 1, len(info), 2):
+            first = info[i]
+            last = info[i+1]
+            last = last[:len(last) - 1]
+            names.append(first + " " + last)
+        
+        myReceipt.assign(itemName, names)
     elif info[0] == "totals":
         bills = None
         
-        if len(info) > 1:
+        if len(info) >= 2:
             bills = myReceipt.getTotals(info[1])
         else:
             bills = myReceipt.getTotals()
             
-        for k,v in bills.items():
+        for k, v in bills.items():
             print(k + " owes $" + v)

@@ -5,7 +5,19 @@ class Receipt:
     def __init__(self):
         self.items = []
         self.users = {}
-    
+
+    # prints all commands
+    def commands(self):
+        print("Command List")
+        print("---------------DON'T INCLUDE BRACKETS---------------")
+        print("To view receipt: view")
+        print("To add user: +user [FirstName LastName]")
+        print("To add NEW item: +item [Name $Price]")
+        print("To increment count of EXISTING item: +item [Name]")
+        print("To remove an item: -item [Name]")
+        print("To assign an item to users: assign [ItemName!] [FirstName1 LastName1 ... FirstNameX LastNameX]")
+        print("To get totals and add a multiplier if necessary: totals [Multiplier]\n")   
+
     # adds all items gotten from receipt scan
     def addAll(self, list):
         for item, price in list:
@@ -35,7 +47,7 @@ class Receipt:
                 item.count += 1
                 break
         
-        if not itemFound and price <= 0:
+        if not itemFound and price <= 0.0:
             print("Can't add an item with 0 or negative price")
             return
         
@@ -45,7 +57,7 @@ class Receipt:
     
     # adds user to list
     def addUser(self, first, last):
-        combined = first+"-"+last
+        combined = first + " " + last
         
         if combined in self.users:
             print("User " + first + " " + last + " already exists")
@@ -70,7 +82,7 @@ class Receipt:
         for item in self.items:
             price = item.getSplit()
             for user in item.users:
-                name = user.firstName+"-"+user.lastName
+                name = user.firstName + " " + user.lastName
                 mem[name] += price
         
         for key in mem:
@@ -84,4 +96,4 @@ class Receipt:
         for item in self.items:
             result += f"{item.name:40} x{item.count:<3} ${item.price:.2f}\n"
         result += "------------------------------------\n"
-        return result
+        return result     
