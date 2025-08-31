@@ -9,7 +9,13 @@ class Item:
     
     # returns the amount owed by each user for the item
     def getSplit(self):
-        return self.price // len(self.users)  
+        size = len(self.users)
+        
+        if size == 0:
+            print("No people assigned to " + self.name)
+            return
+        
+        return (self.price * self.count) / size 
     
     # adds a user to an item
     def addUser(self, user):

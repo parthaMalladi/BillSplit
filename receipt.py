@@ -86,7 +86,7 @@ class Receipt:
                 mem[name] += price
         
         for key in mem:
-            mem[key] *= multi
+            mem[key] *= float(multi)
         
         return mem
     

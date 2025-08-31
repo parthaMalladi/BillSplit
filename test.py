@@ -80,7 +80,6 @@ while True:
         for i in range(itemIndex + 1, len(info), 2):
             first = info[i]
             last = info[i+1]
-            last = last[:len(last) - 1]
             names.append(first + " " + last)
         
         myReceipt.assign(itemName, names)
@@ -93,4 +92,4 @@ while True:
             bills = myReceipt.getTotals()
             
         for k, v in bills.items():
-            print(k + " owes $" + v)
+            print(f"{k} owes ${v:.2f}")
