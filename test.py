@@ -1,7 +1,5 @@
 import pytesseract
 from PIL import Image
-import re
-from receipt import Receipt
 
 img = Image.open("receipt.jpg")
 text = pytesseract.image_to_string(img)
@@ -23,7 +21,6 @@ for i in range(len(items)):
         items[i][0] = temp[:pos].strip()
         items[i][1] = float(temp[pos+1:].strip())
         
-curr = Receipt(items)
 
 while True:
     info = input("Enter Command (type 'cmd' for list of commands or 'exit' to quit): ")
@@ -36,5 +33,6 @@ while True:
         print("----------------------------")
 
 
-    print(curr)
+    for item, price in items:
+        print(item, price)
     
